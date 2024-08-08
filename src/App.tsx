@@ -118,17 +118,6 @@ function App() {
     }
   };
 
-  // const checkListForExistingUrl = (url: string): boolean => {
-  //   // Loop through each album in the allAlbums array
-  //   for (const album of allAlbums) {
-  //     // Check if the URL matches any of the properties in the album
-  //     if (url === album.one || url === album.two || url === album.three || url === album.four) {
-  //       return true; // Return true if a match is found
-  //     }
-  //   }
-  //   return false; // Return false if no match is found
-  // };
-
   const updateAlbums = async (
     event: React.FormEvent,
     index: number,
@@ -136,16 +125,8 @@ function App() {
     typedAlbumFromInput: string
   ) => {
     event.preventDefault();
-    // console.log("UPDATE ALBUMS");
 
     typedAlbumFromInput = typedAlbumFromInput.split("?")[0];
-
-    //let alreadyExist = checkListForExistingUrl(typedAlbumFromInput);
-
-    // if (alreadyExist === true) {
-    //   console.log("already exist in list");
-    //   return;
-    // }
 
     const isValid = await checkSpotifyUrl(typedAlbumFromInput);
 
@@ -200,78 +181,86 @@ function App() {
   };
 
   return (
-    <div className="container">
-      <div className="album">
-        {allAlbums[0].one && <Spotify link={allAlbums[0].one} />}
-        <form onSubmit={(e) => updateAlbums(e, 0, "one", albumOne)}>
-          <input
-            className="input-field"
-            type="text"
-            placeholder="album 1"
-            onChange={(e) => setAlbumOne(e.target.value)}
-            value={albumOne}
-          />
-          <button type="submit" className="submit-button">
-            Update album 1
-          </button>
-        </form>
-        {validUrls.one === false && (
-          <p className="error-message">Invalid Spotify URL for Album 1</p>
-        )}
+    <div>
+      <div className="header">
+        Spotify Battle ground is a MERN stack application where you can paste
+        the URL of a Spotify album into any of the 4 inputs and save them into a
+        MongoDB database. So anyone seeing this site will see your music
+        recomendation.
       </div>
-      <div className="album">
-        {allAlbums[0].two && <Spotify link={allAlbums[0].two} />}
-        <form onSubmit={(e) => updateAlbums(e, 0, "two", albumTwo)}>
-          <input
-            className="input-field"
-            type="text"
-            placeholder="album 2"
-            onChange={(e) => setAlbumTwo(e.target.value)}
-            value={albumTwo}
-          />
-          <button type="submit" className="submit-button">
-            Update album 2
-          </button>
-        </form>
-        {validUrls.two === false && (
-          <p className="error-message">Invalid Spotify URL for Album 2</p>
-        )}
-      </div>
-      <div className="album">
-        {allAlbums[0].three && <Spotify link={allAlbums[0].three} />}
-        <form onSubmit={(e) => updateAlbums(e, 0, "three", albumThree)}>
-          <input
-            className="input-field"
-            type="text"
-            placeholder="album 3"
-            onChange={(e) => setAlbumThree(e.target.value)}
-            value={albumThree}
-          />
-          <button type="submit" className="submit-button">
-            Update album 3
-          </button>
-        </form>
-        {validUrls.three === false && (
-          <p className="error-message">Invalid Spotify URL for Album 3</p>
-        )}
-      </div>
-      <div className="album">
-        {allAlbums[0].four && <Spotify link={allAlbums[0].four} />}
-        <form onSubmit={(e) => updateAlbums(e, 0, "four", albumFour)}>
-          <input
-            className="input-field"
-            type="text"
-            placeholder="album 4"
-            onChange={(e) => setAlbumFour(e.target.value)}
-            value={albumFour}
-          />
-          <button type="submit" className="submit-button">
-            Update album 4
-          </button>
-        </form>
-        {validUrls.four === false && (
-          <p className="error-message">Invalid Spotify URL for Album 4</p>
-        )}
+      <div className="container">
+        <div className="album">
+          {allAlbums[0].one && <Spotify link={allAlbums[0].one} />}
+          <form onSubmit={(e) => updateAlbums(e, 0, "one", albumOne)}>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="album 1"
+              onChange={(e) => setAlbumOne(e.target.value)}
+              value={albumOne}
+            />
+            <button type="submit" className="submit-button">
+              Update album 1
+            </button>
+          </form>
+          {validUrls.one === false && (
+            <p className="error-message">Invalid Spotify URL for Album 1</p>
+          )}
+        </div>
+        <div className="album">
+          {allAlbums[0].two && <Spotify link={allAlbums[0].two} />}
+          <form onSubmit={(e) => updateAlbums(e, 0, "two", albumTwo)}>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="album 2"
+              onChange={(e) => setAlbumTwo(e.target.value)}
+              value={albumTwo}
+            />
+            <button type="submit" className="submit-button">
+              Update album 2
+            </button>
+          </form>
+          {validUrls.two === false && (
+            <p className="error-message">Invalid Spotify URL for Album 2</p>
+          )}
+        </div>
+        <div className="album">
+          {allAlbums[0].three && <Spotify link={allAlbums[0].three} />}
+          <form onSubmit={(e) => updateAlbums(e, 0, "three", albumThree)}>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="album 3"
+              onChange={(e) => setAlbumThree(e.target.value)}
+              value={albumThree}
+            />
+            <button type="submit" className="submit-button">
+              Update album 3
+            </button>
+          </form>
+          {validUrls.three === false && (
+            <p className="error-message">Invalid Spotify URL for Album 3</p>
+          )}
+        </div>
+        <div className="album">
+          {allAlbums[0].four && <Spotify link={allAlbums[0].four} />}
+          <form onSubmit={(e) => updateAlbums(e, 0, "four", albumFour)}>
+            <input
+              className="input-field"
+              type="text"
+              placeholder="album 4"
+              onChange={(e) => setAlbumFour(e.target.value)}
+              value={albumFour}
+            />
+            <button type="submit" className="submit-button">
+              Update album 4
+            </button>
+          </form>
+          {validUrls.four === false && (
+            <p className="error-message">Invalid Spotify URL for Album 4</p>
+          )}
+        </div>
       </div>
     </div>
   );
