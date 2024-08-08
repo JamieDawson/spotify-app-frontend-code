@@ -69,9 +69,9 @@ function App() {
     const fetchAlbum = async () => {
       try {
         const response = await axios.get<Album>(
-          "http://localhost:5555/getAlbum"
+          "https://spotify-app-backend-code.vercel.app/getAlbum"
         );
-        // console.log(response.data);
+        console.log(response.data);
         //console.log(response.data.one.toString());
 
         let test = [
@@ -94,13 +94,16 @@ function App() {
   //Funciton to send data to the backend.
   const updateAlbumOnBackend = async (updates: Partial<Album>) => {
     try {
-      const response = await fetch("http://localhost:5555/albumsUpdate", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updates),
-      });
+      const response = await fetch(
+        "https://spotify-app-backend-code.vercel.app/albumsUpdate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(updates),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! status: ${response.status}`);
