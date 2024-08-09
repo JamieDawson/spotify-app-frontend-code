@@ -3,9 +3,7 @@ import { Spotify } from "react-spotify-embed";
 import axios from "axios";
 import "./App.css";
 import Header from "./components/Header"; // Import the Header component
-
-const CLIENT_ID = import.meta.env.VITE_REACT_APP_CLIENT_ID || "";
-const CLIENT_SECRET = import.meta.env.VITE_REACT_APP_CLIENT_SECRET || "";
+import useSpotifyAccessToken from "./hooks/useSpotifyAccessToken"; // Import the custom hook
 
 type Album = {
   one: string;
@@ -39,42 +37,17 @@ function App() {
     four: null,
   });
 
-  const [accessToken, setAccessToken] = useState<string>("");
-
-  //Gets access token as soon as the app loads.
-  useEffect(() => {
-    console.log("USEEFFECT GET ACCESS TOKEN");
-    const getAccessToken = async () => {
-      try {
-        const response = await axios.post(
-          "https://accounts.spotify.com/api/token",
-          "grant_type=client_credentials",
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-              Authorization: `Basic ${btoa(`${CLIENT_ID}:${CLIENT_SECRET}`)}`,
-            },
-          }
-        );
-        setAccessToken(response.data.access_token);
-      } catch (error) {
-        console.error("Failed to fetch access token", error);
-      }
-    };
-    getAccessToken();
-  }, []);
+  const accessToken = useSpotifyAccessToken(); // Use the custom hook
 
   //Runs once when app loads. Gets albums that are currently in backend.
   useEffect(() => {
-    console.log("USEEFFECT GETALBUMS CALL");
+    console.log("USEEFFECT GET ALBUMS CALL");
     const fetchAlbum = async () => {
       try {
         const response = await axios.get<Album>(
           "https://spotify-app-backend-code.vercel.app/getAlbum"
         );
         console.log(response.data);
-        //console.log(response.data.one.toString());
-
         let test = [
           {
             one: response.data.one,
@@ -92,7 +65,7 @@ function App() {
     fetchAlbum();
   }, []);
 
-  //Funciton to send data to the backend.
+  //Function to send data to the backend.
   const updateAlbumOnBackend = async (updates: Partial<Album>) => {
     try {
       const response = await fetch(
@@ -111,7 +84,6 @@ function App() {
       }
 
       const updatedAlbum = await response.json();
-      // console.log("Album updated:", updatedAlbum);
       return updatedAlbum;
     } catch (error) {
       console.error("Failed to update album:", error);
@@ -129,41 +101,44 @@ function App() {
 
     typedAlbumFromInput = typedAlbumFromInput.split("?")[0];
 
-    const isValid = await checkSpotifyUrl(typedAlbumFromInput);
+    if (accessToken) {
+      const isValid = await checkSpotifyUrl(typedAlbumFromInput);
 
-    if (isValid) {
-      const newObject = [...allAlbums];
-      newObject[index] = {
-        ...newObject[index],
-        [albumKey]: typedAlbumFromInput,
-      };
-      setAllAlbums(newObject);
-      setValidUrls((prevValidUrls) => ({
-        ...prevValidUrls,
-        [albumKey]: true,
-      }));
+      if (isValid) {
+        const newObject = [...allAlbums];
+        newObject[index] = {
+          ...newObject[index],
+          [albumKey]: typedAlbumFromInput,
+        };
+        setAllAlbums(newObject);
+        setValidUrls((prevValidUrls) => ({
+          ...prevValidUrls,
+          [albumKey]: true,
+        }));
 
-      // Prepare the update payload
-      const updates: Partial<Album> = {
-        [albumKey]: typedAlbumFromInput,
-      };
+        // Prepare the update payload
+        const updates: Partial<Album> = {
+          [albumKey]: typedAlbumFromInput,
+        };
 
-      // Send the update to the backend
-      try {
-        await updateAlbumOnBackend(updates);
-      } catch (error) {
-        console.error("Error updating album on backend:", error);
+        // Send the update to the backend
+        try {
+          await updateAlbumOnBackend(updates);
+        } catch (error) {
+          console.error("Error updating album on backend:", error);
+        }
+      } else {
+        setValidUrls((prevValidUrls) => ({
+          ...prevValidUrls,
+          [albumKey]: false,
+        }));
       }
     } else {
-      setValidUrls((prevValidUrls) => ({
-        ...prevValidUrls,
-        [albumKey]: false,
-      }));
+      console.error("Access token is not available.");
     }
   };
 
   const checkSpotifyUrl = async (url: string): Promise<boolean> => {
-    // console.log("CHECK SPOTIFY URL");
     try {
       const albumId = url.split("/album/")[1].split("?")[0];
 
