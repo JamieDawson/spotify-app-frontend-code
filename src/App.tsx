@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Spotify } from "react-spotify-embed";
 import axios from "axios";
 import "./App.css";
+import Header from "./components/Header"; // Import the Header component
 
 const CLIENT_ID = import.meta.env.VITE_REACT_APP_CLIENT_ID || "";
 const CLIENT_SECRET = import.meta.env.VITE_REACT_APP_CLIENT_SECRET || "";
@@ -182,12 +183,7 @@ function App() {
 
   return (
     <div>
-      <div className="header">
-        Spotify Battle ground is a MERN stack application where you can paste
-        the URL of a Spotify album into any of the 4 inputs and save them into a
-        MongoDB database. So anyone seeing this site will see your music
-        recomendation.
-      </div>
+      <Header />
       <div className="container">
         <div className="album">
           {allAlbums[0].one && <Spotify link={allAlbums[0].one} />}
