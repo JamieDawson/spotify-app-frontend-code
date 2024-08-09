@@ -1,10 +1,9 @@
-import axios from "axios";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Spotify } from "react-spotify-embed";
+import axios from "axios";
 import "./App.css";
 import Header from "./components/Header"; // Import the Header component
-import useSpotifyAccessToken from "./hooks/useSpotifyAccessToken"; // Import the custom hook for access token
-import useFetchAlbums from "./hooks/useFetchAlbums"; // Import the custom hook for fetching albums
+import useSpotifyAccessToken from "./hooks/useSpotifyAccessToken"; // Import the custom hook
 
 type Album = {
   one: string;
@@ -19,8 +18,14 @@ function App() {
   const [albumThree, setAlbumThree] = useState<string>("");
   const [albumFour, setAlbumFour] = useState<string>("");
 
-  // Use the custom hook to fetch albums
-  const { albums: allAlbums } = useFetchAlbums();
+  const [allAlbums, setAllAlbums] = useState<Album[]>([
+    {
+      one: "",
+      two: "",
+      three: "",
+      four: "",
+    },
+  ]);
 
   // State to track validity for each album
   const [validUrls, setValidUrls] = useState<{
@@ -32,7 +37,33 @@ function App() {
     four: null,
   });
 
-  const accessToken = useSpotifyAccessToken(); // Use the custom hook for access token
+  const accessToken = useSpotifyAccessToken(); // Use the custom hook
+
+  //Runs once when app loads. Gets albums that are currently in backend.
+  useEffect(() => {
+    console.log("USEEFFECT GET ALBUMS CALL");
+    const fetchAlbum = async () => {
+      try {
+        const response = await axios.get<Album>(
+          "https://spotify-app-backend-code.vercel.app/getAlbum"
+        );
+        console.log(response.data);
+        let test = [
+          {
+            one: response.data.one,
+            two: response.data.two,
+            three: response.data.three,
+            four: response.data.four,
+          },
+        ];
+        setAllAlbums(test);
+      } catch (err) {
+        console.log("Failed to fetch album data");
+      }
+    };
+
+    fetchAlbum();
+  }, []);
 
   //Function to send data to the backend.
   const updateAlbumOnBackend = async (updates: Partial<Album>) => {
@@ -79,6 +110,7 @@ function App() {
           ...newObject[index],
           [albumKey]: typedAlbumFromInput,
         };
+        setAllAlbums(newObject);
         setValidUrls((prevValidUrls) => ({
           ...prevValidUrls,
           [albumKey]: true,
