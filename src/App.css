@@ -3,22 +3,6 @@ body {
   padding: 0;
 }
 
-.header {
-  position: fixed; /* Fixes the header to the top */
-  top: 0;
-  left: 0;
-  width: 100%;
-  font-size: 1.5em;
-  text-align: center;
-  margin: 0; /* Remove margin as it's not needed for fixed positioning */
-  padding: 10px;
-  background-color: #e0e0e0; /* Light background color for contrast */
-  border-radius: 8px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  color: #333;
-  z-index: 1000; /* Ensures the header is on top of other content */
-}
-
 .container {
   display: flex;
   flex-wrap: wrap;
