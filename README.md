@@ -2,6 +2,8 @@
 
 Spotify Battleground is a MERN stack app that displays 4 Spotify players that anyone can update the albums in the video players.
 
+[You can interact with the website by clickin this link](https://github.com/JamieDawson/spotify-app-frontend-code)
+
 ## How to update albums in the video players:
 
 1. Go to any album on Spotify.
